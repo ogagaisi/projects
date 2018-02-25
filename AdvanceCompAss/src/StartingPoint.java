@@ -53,11 +53,96 @@ public class StartingPoint {
 		return structuredData;
 	}
 	
+	/**
+	 * The Map function 
+	 * @param flightData a list of lists representing the data in the file*/
+	public static List<FlightData> mapper( List<List<String>> flightData){
+		
+		
+		boolean thereIsRefId = false; // keeps track if something has been stored in reference ID
+		FlightData fData = new FlightData();  // A reference of the FlightData class
+		List<FlightData> outPutList = new ArrayList<>();
+		String referenceID = "";
+		
+		for (int i = 0; i < flightData.size(); i++){ // Main loop, each element here represents a line in the file
+			
+			for (int j = 0; j < flightData.get(i).size(); j++){ // Loops through each comma separated value in a line
+
+						 
+				 if (thereIsRefId){
+				 
+					 if (flightData.get(i).get(1).equals(referenceID)){ // the current ID is the same as the reference
+						 // current flight id == referenceID
+						 switch(j){
+						 	case 0:
+						 		// passenger ID: List
+						 		fData.setPassengerID(flightData.get(i).get(j));
+						 		break;
+						 		
+						 	case 1:
+						 		// Flight ID:
+						 		fData.setFlightID(flightData.get(i).get(j));
+						 		break;
+						 		
+						 	case 2:
+						 		// fromAirort
+						 		fData.setFromAirport(flightData.get(i).get(j));						 		
+						 		break;
+						 		
+						 		
+						 	case 3:
+						 		// destination Airport
+						 		fData.setDestination(flightData.get(i).get(j));
+						 		break;
+						 		
+						 	case 4:
+						 		// departure time
+						 		fData.setDepartureTime(flightData.get(i).get(j));
+						 		break;
+						 	
+						 	case 5:
+						 		// total flight time
+						 		fData.setTotalFlightTime(flightData.get(i).get(j));
+						 		break;
+						 	
+						 	default:
+						 		
+						 		
+						 }
+						 
+					 }
+					 else{
+						//No more data for old flight ID
+						 outPutList.add(fData);
+						 referenceID = flightData.get(i).get(1);
+						 fData = new FlightData();
+						 fData.setPassengerID(flightData.get(i).get(j));
+					 }
+
+					 
+				 }
+				 else{
+					 // This is the first flight ID
+					 //get flightID and store it
+					 referenceID = flightData.get(i).get(1); // flightID is in the second element (index:1)
+					 thereIsRefId = true;
+					 fData.setPassengerID(flightData.get(i).get(j));
+
+
+				 }
+			}	
+		}
+		
+		fData.display();
+		
+		 return new ArrayList<FlightData>();
+	}
+	
 	public static void main(String[] args) {
 		
 		String passengerDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\AComp_Passenger_data_no_error.csv";
 		String airportDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\Top30_airports_LatLong.csv";
-		
+		List<FlightData> mapperOutput = new ArrayList<>();
 		List<List<String>> flightData = new ArrayList<>();// Stores the data from "AComp_Passenger_data.csv"
 		List<List<String>> airportData = new ArrayList<>(); // Stores the data from "Top30_airports_LatLong"
 
@@ -65,9 +150,10 @@ public class StartingPoint {
 		flightData = readFile(passengerDataPath, StandardCharsets.UTF_8);
 		airportData = readFile(airportDataPath, StandardCharsets.UTF_8);
 		
-		for(List<String> data: flightData){
+		mapper(flightData);
+		/*for(List<String> data: flightData){
 			System.out.println(data);		
-		}
+		}*/
 		
 	}
 

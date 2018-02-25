@@ -55,8 +55,8 @@ public class FlightData {
 		return totalFlightTime;
 	}
 
-	public void setPassengerID(List<String> passengerID) {
-		this.passengerID = passengerID;
+	public void setPassengerID(String passengerID) {
+		this.passengerID.add(passengerID);
 	}
 
 	public void setFlightID(String flightID) {
@@ -71,12 +71,12 @@ public class FlightData {
 		this.destination = destination;
 	}
 
-	public void setDepartureTime(int departureTime) {
-		this.departureTime = departureTime;
+	public void setDepartureTime(String departureTime) {
+		this.departureTime = Integer.parseInt(departureTime);
 	}
 
-	public void setTotalFlightTime(int totalFlightTime) {
-		this.totalFlightTime = totalFlightTime;
+	public void setTotalFlightTime(String  totalFlightTime) {
+		this.totalFlightTime = Integer.parseInt(totalFlightTime) ;
 	}
 	
 }
