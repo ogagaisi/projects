@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class StartingPoint {
 	
@@ -114,6 +115,7 @@ public class StartingPoint {
 					 else{
 						//No more data for old flight ID
 						 outPutList.add(fData);
+						 //fData.display();
 						 referenceID = flightData.get(i).get(1);
 						 fData = new FlightData();
 						 fData.setPassengerID(flightData.get(i).get(j));
@@ -133,14 +135,49 @@ public class StartingPoint {
 			}	
 		}
 		
-		fData.display();
 		
-		 return new ArrayList<FlightData>();
+		
+		
+		outPutList.add(fData);
+
+		
+		return outPutList;
+	}
+	
+	/**
+	 * This handles error detection and correction
+	 * */
+	public static void errorCorrect(List<List<String>>in){
+		 
+		 String zero[] = {"0","0","0","0","0","0"}; 
+		 String empty[] ={"","","","","",""};
+		 String emptyAndZero[] ={"","","","","0","0"};
+
+		 
+		for(int i = 0; i < in.size(); i++){
+			
+			 if(in.get(i).isEmpty() || in.get(i).equals(Arrays.asList(emptyAndZero)) || in.get(i).equals(Arrays.asList(zero)) || in.get(i).equals(Arrays.asList(empty))){//Blank rows
+				 System.out.println("A blank row was detected and removed: " + in.get(i));
+				 in.remove(i);
+				 
+			 }
+			 else if(in.get(i).get(0).isEmpty()){// passenger id is empty 
+				 System.out.println("A row with no passanger ID has been found:" + in.get(i));
+			 }
+			 else{
+				 //System.out.println("no");
+			 }
+			 
+		}
+		 
+
+		
+
 	}
 	
 	public static void main(String[] args) {
 		
-		String passengerDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\AComp_Passenger_data_no_error.csv";
+		String passengerDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\AComp_Passenger test.csv";
 		String airportDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\Top30_airports_LatLong.csv";
 		List<FlightData> mapperOutput = new ArrayList<>();
 		List<List<String>> flightData = new ArrayList<>();// Stores the data from "AComp_Passenger_data.csv"
@@ -150,9 +187,18 @@ public class StartingPoint {
 		flightData = readFile(passengerDataPath, StandardCharsets.UTF_8);
 		airportData = readFile(airportDataPath, StandardCharsets.UTF_8);
 		
-		mapper(flightData);
+		//errorCorrect(flightData);
+		//mapperOutput = mapper(flightData);	
+		
+		
 		/*for(List<String> data: flightData){
 			System.out.println(data);		
+		}*/
+		 
+		 
+		 // tes end
+		/*for(FlightData data: mapperOutput){
+			data.display();	
 		}*/
 		
 	}
