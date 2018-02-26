@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -188,10 +189,61 @@ public class StartingPoint {
 				
 		
 	}
+	
+	public static void createReducerOutPut(List<List<String>> input){
+		
+		Html html = new Html();
+		html.addLines(new String[]{"<html>",
+		"<head>",
+		"<title>Reducer Output</title>",
+		"<style type='text/css'>",
+		"body {",
+		"font-family: arial;",
+		"}", 
+		"table, th, td {",
+		    "border: 1px solid black;",
+	    "border-collapse: collapse;",
+		"}",
+		"th, td {",
+	    "padding: 5px;",
+	    "text-align: left;",
+		"}",
+		"</style>",
+		"</head>",
+		"<body>",
+		"<h1 style='text-align:center'>Reducer's Output</h1>",
+		"<table style='margin: 0 auto'>",
+		  "<tr>",
+		    "<th style ='width:50px'>No.</th>",
+		    "<th style ='width:250px'>Flight ID</th>",
+		    "<th style ='width:250px'>Number of Passengers</th>",
+		  "</tr>"
+		});
+		 for(int i = 0; i<input.size(); i++){
+			    html.addLines(new String[]{"<tr>",
+			    "<td>"+(i+1)+"</td>",
+			    "<td>"+input.get(i).get(0)+"</td>",// Flight ID
+			    "<td>"+input.get(i).get(1)+"</td>", // Number of passengers
+			    "</tr>"});
+			  }
+		html.addLines(new String[]{
+			"</table>",
+			"</body>",
+			"</html>"
+		});
+		
+		Path file = Paths.get("Output\\reducerOutput.html");
+		try {
+			Files.write(file, html.getCodeList(), Charset.forName("UTF-8"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public static void main(String[] args) {
 		
-		String passengerDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\AComp_Passenger_data_no_error.csv";
-		String airportDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\Top30_airports_LatLong.csv";
+		String passengerDataPath = "csv files\\AComp_Passenger_data_no_error.csv";
+		String airportDataPath = "csv files\\Top30_airports_LatLong.csv";
 		List<FlightData> mapperOutput = new ArrayList<>();
 		List<List<String>> flightData = new ArrayList<>();// Stores the data from "AComp_Passenger_data.csv"
 		List<List<String>> airportData = new ArrayList<>(); // Stores the data from "Top30_airports_LatLong"
@@ -201,6 +253,8 @@ public class StartingPoint {
 		airportData = readFile(airportDataPath, StandardCharsets.UTF_8);
 		
 		errorCorrect(flightData);
+		
+		
 		
 		
 		System.out.println("Structure of the file after error correction and sorting: "); // --> write to a file
@@ -221,6 +275,7 @@ public class StartingPoint {
 			 System.out.println("");
 		
 		List<List<String>> redOut =  reducer(mapperOutput);
+		createReducerOutPut(redOut);
 		System.out.println("reducer's output: ");  // --> write to a file
 		 for(List<String> data: redOut){
 			 System.out.println(data);	
