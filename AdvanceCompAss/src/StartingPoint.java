@@ -152,32 +152,45 @@ public class StartingPoint {
 		 String zero[] = {"0","0","0","0","0","0"}; 
 		 String empty[] ={"","","","","",""};
 		 String emptyAndZero[] ={"","","","","0","0"};
-
 		 
-		for(int i = 0; i < in.size(); i++){
+		 
+		for(int i = in.size() -1 ; i >= 0 ; i--){
 			
-			 if(in.get(i).isEmpty() || in.get(i).equals(Arrays.asList(emptyAndZero)) || in.get(i).equals(Arrays.asList(zero)) || in.get(i).equals(Arrays.asList(empty))){//Blank rows
-				 System.out.println("A blank row was detected and removed: " + in.get(i));
+			 if(in.get(i).isEmpty() || in.get(i).equals(Arrays.asList(emptyAndZero)) || in.get(i).equals(Arrays.asList(zero)) || in.get(i).equals(Arrays.asList(empty))){//Blank rows */
+				 System.out.println("A blank row was detected and removed: " + in.get(i));				 
 				 in.remove(i);
-				 
-			 }
-			 else if(in.get(i).get(0).isEmpty()){// passenger id is empty 
-				 System.out.println("A row with no passanger ID has been found:" + in.get(i));
-			 }
-			 else{
-				 //System.out.println("no");
 			 }
 			 
-		}
-		 
-
+			 else if(in.get(i).get(0).isEmpty()){// passenger id is empty 
+				 System.out.println("A row with no passanger ID has been found: and removed" + in.get(i));
+				 in.remove(i);
+			 }
+			 else{
+			 }
+			 
+		}				 		
 		
-
+		in.sort((l1, l2) -> l1.get(1).compareTo(l2.get(1)));
 	}
-	
+	 
+	public static List<List<String>> reducer(List<FlightData> fData){
+		List<List<String>> outPut = new ArrayList<>();
+		List<String> fIDPassenger = new ArrayList<>(); // The Flight ID and its corresponding number of passenegrs 
+		
+		for(FlightData data: fData){
+			 fIDPassenger.add(data.getFlightID());
+			 fIDPassenger.add(""+ data.getPassengerID().size());
+			 outPut.add(fIDPassenger);
+			 fIDPassenger = new ArrayList<>(); // Java acceses variables by reference, this ensures new sets of Flight data are not put in the same variable 
+		}
+		
+		return outPut;
+				
+		
+	}
 	public static void main(String[] args) {
 		
-		String passengerDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\AComp_Passenger test.csv";
+		String passengerDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\AComp_Passenger_data_no_error.csv";
 		String airportDataPath = "C:\\Users\\ogaga isiavwe\\Desktop\\csv files\\Top30_airports_LatLong.csv";
 		List<FlightData> mapperOutput = new ArrayList<>();
 		List<List<String>> flightData = new ArrayList<>();// Stores the data from "AComp_Passenger_data.csv"
@@ -187,19 +200,33 @@ public class StartingPoint {
 		flightData = readFile(passengerDataPath, StandardCharsets.UTF_8);
 		airportData = readFile(airportDataPath, StandardCharsets.UTF_8);
 		
-		//errorCorrect(flightData);
-		//mapperOutput = mapper(flightData);	
+		errorCorrect(flightData);
 		
 		
-		/*for(List<String> data: flightData){
+		System.out.println("Structure of the file after error correction and sorting: "); // --> write to a file
+		for(List<String> data: flightData){
 			System.out.println(data);		
-		}*/
+		}
+		 System.out.println("");
+		 System.out.println("");
 		 
+		
+		 mapperOutput = mapper(flightData);		 
 		 
-		 // tes end
-		/*for(FlightData data: mapperOutput){
-			data.display();	
-		}*/
+		System.out.println("Mappers output: ");  // --> write to a file
+		 for(FlightData data: mapperOutput){
+				data.display();		
+		}
+			 System.out.println("");
+			 System.out.println("");
+		
+		List<List<String>> redOut =  reducer(mapperOutput);
+		System.out.println("reducer's output: ");  // --> write to a file
+		 for(List<String> data: redOut){
+			 System.out.println(data);	
+		}
+			 
+		 
 		
 	}
 
